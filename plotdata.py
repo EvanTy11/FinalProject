@@ -60,6 +60,8 @@ class plotdata:
             data = [record[var] for record in result]
 
         connection.close()
+
+        # Convert data to DataFrame
         df = pd.DataFrame(data, columns=[var])
 
 
