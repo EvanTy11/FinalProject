@@ -1,5 +1,5 @@
 import yaml
-import neo4j
+from neo4j import GraphDatabase
 
 
 class dbconnection:
@@ -8,17 +8,18 @@ class dbconnection:
     def __init__(self, configfile):
         '''init constructor for our dbconfig class'''
         self.configfile = configfile
+        self.config = self.load_config()
 
-    def load_config():
+    def load_config(self):
         '''Parses config file and returns python obj'''
-        with open("config.yaml", "r") as file:
+        with open(self.configfile, "r") as file:
             return yaml.safe_load(file)
-    # stores obj for later use
-    config = load_config()
 
     def get_neo_connection(self):
         '''takes in self.config
-        returns a redis obj'''
-        uri = "bolt://localhost:7687"
-        driver = neo4j.GraphDatabase.driver(uri,auth=("neo4j","password"))
+        returns a neo4j driver obj'''
+        uri = self.config['neo4j']['uri']
+        user = self.config['neo4j']['user']
+        password = self.config['neo4j']['password']
+        driver = GraphDatabase.driver(uri, auth=(user, password))
         return driver
